@@ -8,19 +8,22 @@ class ExtractSeasonsSpider(scrapy.Spider):
 
     def start_requests(self):
         #打开事先准备好的json
-        with open('../bangumi_first.json', 'r', encoding='utf-8') as f:
+        # with open('bangumi_first.json', 'r', encoding='utf-8') as f:
+        #     self.anime_list = json.load(f)
+
+        #用测试文件调试
+        with open('test.json', 'r', encoding='utf-8') as f:
             self.anime_list = json.load(f)
         
+        #提取现有的序号和评分，构造url
         for anime in self.anime_list:
             index = anime['index']
-            series_name = anime['name']
             score = anime['score']
-            start_url = f'https://bangumi.tv/subject/{index}/'
+            start_url = f'https://bangumi.tv/subject/{index}'
             yield scrapy.Request(
                 url=start_url,
                 callback=self.parse_first,
                 meta={
-                    'series_name':series_name,
                     'season_num':1,
                     'index':index,
                     'score':score
@@ -34,7 +37,7 @@ class ExtractSeasonsSpider(scrapy.Spider):
         
         item['index'] = response.meta['index']
         
-        name = response.meta['series_name']
+        name = self.get_name(response)  #弥补之前提取名称的错误
         item['series_name'] = name
         item['season_name'] = name  #用第一季名字当作系列名字
         
@@ -53,19 +56,13 @@ class ExtractSeasonsSpider(scrapy.Spider):
 
 
         #续作处理逻辑
-        next_season_sub = response.xpath(
-            "//span[text()='续集']/following-sibling::a[1]/@href"
-            ).get()
-        
-        if next_season_sub:
-            next_season_sub = next_season_sub.strip()
-            next_index = next_season_sub[9:]
-            next_season_url = response.urljoin(next_season_sub)
+        next_info = self.get_next(response)
+        if next_info:
             yield scrapy.Request(
-                url=next_season_url,
+                url=next_info[0],
                 callback=self.parse_next,
                 meta={
-                    'index':next_index,
+                    'index':next_info[1],
                     'series_name':name,
                     'season_num':season_num + 1
                 },
@@ -81,9 +78,8 @@ class ExtractSeasonsSpider(scrapy.Spider):
         series_name = response.meta['series_name']
         item['series_name'] = series_name
 
-        item['season_name'] = response.xpath(
-            "//span[contains(@class, 'tip') and contains(text(), '中文名: ')]/following-sibling::text()"
-            ).get(default='无名称').strip()
+        name = self.get_name(response)
+        item['season_name'] = name
 
         season_num = response.meta['season_num']
         item['season_num'] = season_num
@@ -100,25 +96,50 @@ class ExtractSeasonsSpider(scrapy.Spider):
         
         yield item
 
-
         #寻找下一季
-        next_season_sub = response.xpath(
-            "//span[text()='续集']/following-sibling::a[1]/@href"
-            ).get()
-        if next_season_sub:
-            next_season_sub = next_season_sub.strip()
-            next_index = next_season_sub[9:]
-            next_season_url = response.urljoin(next_season_sub)
+        next_info = self.get_next(response)
+        if next_info:
             yield scrapy.Request(
-                url=next_season_url,
+                url=next_info[0],
                 callback=self.parse_next,
                 meta={
-                    'index':next_index,
+                    'index':next_info[1],
                     'series_name':series_name,
                     'season_num':season_num + 1
                 },
                 errback=self.handle_error
             )
 
+
+
+
+    """
+    辅助函数区域
+    """
+
+    #错误处理
     def handle_error(self, failure):
         self.logger.error(f"请求失败: {failure.request.url}，原因: {failure.value}")
+    
+    #获取名称
+    def get_name(self, response):
+        name = response.xpath(
+            "//span[contains(@class, 'tip') and contains(text(), '中文名: ')]/following-sibling::text()"
+            ).get(default=' ').strip()
+        if not name:
+            name = response.xpath(
+                "//h1[@class='nameSingle']/a/text()"
+                ).get(default='无名称').strip()
+        return name
+    
+    #获取下一页url和index
+    def get_next(self, response):
+        next_season_sub = response.xpath(
+            "//span[text()='续集']/following-sibling::a[1]/@href"
+            ).get()
+        if not next_season_sub:
+            return None
+        next_season_sub = next_season_sub.strip()
+        next_index = next_season_sub[9:]
+        next_season_url = response.urljoin(next_season_sub)
+        return (next_season_url, next_index)

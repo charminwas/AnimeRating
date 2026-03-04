@@ -6,30 +6,28 @@ class ExtractSeasonsSpider(scrapy.Spider):
     name = "extract_seasons"
     allowed_domains = ["bangumi.tv"]
 
-    def start_requests(self):
-        #打开事先准备好的json
-        # with open('bangumi_first.json', 'r', encoding='utf-8') as f:
-        #     self.anime_list = json.load(f)
-
-        #用测试文件调试
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         with open('test.json', 'r', encoding='utf-8') as f:
             self.anime_list = json.load(f)
-        
+        self.current_idx = 0
+
+    def start_requests(self):
         #提取现有的序号和评分，构造url
-        for anime in self.anime_list:
-            index = anime['index']
-            score = anime['score']
-            start_url = f'https://bangumi.tv/subject/{index}'
-            yield scrapy.Request(
-                url=start_url,
-                callback=self.parse_first,
-                meta={
-                    'season_num':1,
-                    'index':index,
-                    'score':score
-                },
-                errback=self.handle_error
-            )
+        anime = self.anime_list[self.current_idx]
+        index = anime['index']
+        score = anime['score']
+        start_url = f'https://bangumi.tv/subject/{index}'
+        yield scrapy.Request(
+            url=start_url,
+            callback=self.parse_first,
+            meta={
+                'season_num':1,
+                'index':index,
+                'score':score
+            },
+            errback=self.handle_error
+        )
 
     def parse_first(self, response):
         #提取第一季信息
@@ -109,6 +107,24 @@ class ExtractSeasonsSpider(scrapy.Spider):
                 },
                 errback=self.handle_error
             )
+        else:
+            self.current_idx += 1
+            if self.current_idx < len(self.anime_list):
+                next_anime = self.anime_list[self.current_idx]
+                next_index = next_anime['index']
+                next_score = next_anime['score']
+                next_url = f'https://bangumi.tv/subject/{next_index}'
+
+                yield scrapy.Request(
+                    url=next_url,
+                    callback=self.parse_first,  # 👈 直接用 parse_first
+                    meta={
+                        'season_num': 1,
+                        'index': next_index,
+                        'score': next_score
+                    },
+                    errback=self.handle_error
+                )
 
 
 

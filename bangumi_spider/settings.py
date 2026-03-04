@@ -7,8 +7,6 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-import random
-
 BOT_NAME = "bangumi_spider"
 
 SPIDER_MODULES = ["bangumi_spider.spiders"]
@@ -24,9 +22,10 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 ROBOTSTXT_OBEY = False
 
 # Concurrency and throttling settings
-#CONCURRENT_REQUESTS = 16
+CONCURRENT_REQUESTS = 1
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
-DOWNLOAD_DELAY = random.uniform(1, 3)
+DOWNLOAD_DELAY = 2
+
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False

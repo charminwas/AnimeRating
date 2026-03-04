@@ -12,7 +12,11 @@ class BangumiSpiderItem(scrapy.Item):
     score = scrapy.Field()
 
 class BangumiSeasonsItem(scrapy.Item):
-    name = scrapy.Field()
-    season = scrapy.Field()
+    index = scrapy.Field()  #唯一序号
+
+    series_name = scrapy.Field()
+    season_name = scrapy.Field()
+    season_num = scrapy.Field()
     score = scrapy.Field()
-    rate_num = scrapy.Field()
+
+    rate_num = scrapy.Field()  #用评分人数代表数据置信度

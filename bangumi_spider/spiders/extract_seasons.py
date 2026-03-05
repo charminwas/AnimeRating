@@ -12,7 +12,7 @@ class ExtractSeasonsSpider(scrapy.Spider):
         #     self.anime_list = json.load(f)
 
         #用测试文件调试
-        with open('test.json', 'r', encoding='utf-8') as f:
+        with open('sec.json', 'r', encoding='utf-8') as f:
             self.anime_list = json.load(f)
         
         #提取现有的序号和评分，构造url

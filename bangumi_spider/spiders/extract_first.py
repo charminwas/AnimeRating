@@ -6,7 +6,7 @@ import re
 class ExtractFirstSpider(scrapy.Spider):
     name = "extract_first"
     allowed_domains = ["bangumi.tv"]
-    start_urls = ["https://bangumi.tv/anime/browser/?sort=trends&page=23"]
+    start_urls = ["https://bangumi.tv/anime/browser/?sort=trends"]
     max_page = 22
     current_page = 1
 

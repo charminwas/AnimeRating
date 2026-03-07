@@ -7,12 +7,8 @@ class ExtractSeasonsSpider(scrapy.Spider):
     allowed_domains = ["bangumi.tv"]
 
     def start_requests(self):
-        #打开事先准备好的json
-        # with open('bangumi_first.json', 'r', encoding='utf-8') as f:
-        #     self.anime_list = json.load(f)
-
-        #用测试文件调试
-        with open('sec.json', 'r', encoding='utf-8') as f:
+        #打开extract_first爬虫导出的json
+        with open('0_bangumi_first.json', 'r', encoding='utf-8') as f:
             self.anime_list = json.load(f)
         
         #提取现有的序号和评分，构造url

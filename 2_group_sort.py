@@ -1,7 +1,7 @@
 import pandas as pd
 
 # 从当前目录读取output.csv文件
-df = pd.read_csv('output.csv')
+df = pd.read_csv('1_output.csv')
 
 # 分组依据的列名
 group_by_column = 'series_name'
@@ -13,7 +13,7 @@ within_group_sort_column = 'season_num'
 # 对DataFrame进行分组
 grouped_data = df.groupby(group_by_column)
 
-# 提取每个分组中"评分数值"列的第一个值用于后续分组维度的排序
+# 提取每个分组中"rate_num"列的第一个值用于后续分组维度的排序，评分人数多的靠前排
 group_first_rate_values = grouped_data[group_sort_column].first()
 
 # 让同一分组的所有行都拥有该分组的rate_num基准值，方便后续整体排序

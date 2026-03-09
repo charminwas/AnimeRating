@@ -27,5 +27,39 @@
 - `7_bangumi_rating_trend.png`: 可视化折线图（6_draw_figure.py 生成）
 
 #### **4. 额外文件（个人查询筛选）**
-- `8_data_selected.csv`: 过滤后的数据（4_filter.py 处理结果），我查询观众对“第几季叫什么”的看法，人工再次筛选了数据
+- `8_data_selected.csv`: 基于过滤后的数据（4_filter.py 处理结果），我查询观众对“第几季叫什么”的看法，人工再次筛选了数据
 - `9_rating_trend_selected.png`: 依据`8_data_selected.csv`生成可视化折线图（6_draw_figure.py 生成）
+
+## **运行步骤**
+### **1. 环境准备**
+安装依赖库：
+```bash
+pip install scrapy pandas matplot lib
+```
+
+### **2. 执行顺序**
+1. 在根目录下运行爬虫获取首部索引
+   ```bash
+   scrapy crawl extract_first -o 0_bangumi_series_first_index.json
+   ```
+2. 在根目录下运行爬虫获取全系列数据
+   ```bash
+   scrapy crawl extract_seasons -o 1_bangumi_seasons_raw_data.csv
+   ```
+3. 数据分组排序
+   ```bash
+   python 2_group_sort.py
+   ```
+4. 数据过滤
+   ```bash
+   python 4_filter.py
+   ```
+5. 绘制图表
+   ```bash
+   python 6_draw_figure.py
+   ```
+
+## **备注**
+- 虽然爬虫设置了延迟、爬取量限制等，仍建议将任务拆分为多个部分，少量多次爬取
+- 数据过滤条件（保留季度总数为多少、评分人数为多少的动漫系列）可以在4_filter.py中修改；可视化图表样式也可以在6_draw_figure.py中修改
+- 以上动漫数据提取于2026/03/05

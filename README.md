@@ -34,7 +34,7 @@
 ### **1. 环境准备**
 安装依赖库：
 ```bash
-pip install scrapy pandas matplot lib
+pip install scrapy pandas matplotlib
 ```
 
 ### **2. 执行顺序**

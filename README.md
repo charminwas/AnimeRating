@@ -1,15 +1,28 @@
-#**AnimeRate**
-####*对于有多个季度的动漫，探究其评分随季度数的变化曲线*
+# **AnimeRate**
+此项目通过Scrapy爬取bangumi.tv系列动画数据，经pandas处理、matplotlib可视化，最终输出分析结果。
 
-##数据采集：
-构建基于scrapy的爬虫，从开源ACGN资料库网站Bangumi([bangumi.tv](https://bangumi.tv/))爬取系列动漫的各部的：
-  -序号
-  -名称
-  -评分
-  -评分人数
-  -所属的系列名
+## **项目流程**
+整体流程按「爬取→处理→筛选→可视化」分步执行，每步输出独立文件，方便追溯各阶段数据：
+1. 爬取系列首部索引 → 生成基础索引文件
+2. 爬取全系列详情数据 → 生成原始数据文件
+3. 按系列分组并排序 → 生成排序后数据文件
+4. 过滤数据（季数/评分人数）→ 生成筛选后数据文件
+5. 可视化分析 → 生成折线图
 
-##数据整理：
-1.基于pandas库，对提取到的信息进行分组、排序处理
-2.基于matplotlib库，将处理好的信息以图表形式展示
-3.通过观察，找出各系列动漫评分随季度的变化规律
+## **文件说明**
+### **1. 爬虫文件（Scrapy）**
+- `extract_first.py`: 爬取 bangumi.tv 所有系列动漫的**首部作品索引(index)**
+- `extract_seasons.py`: 爬取系列首作+后续所有动漫的索引(index)、评分数(rate_num)、评分(score)、名称(season_name)、第几季(season_num)、系列名(series_name)
+
+### **2. 数据处理/可视化文件（Python）**
+- `2_group_sort.py`: 基于 pandas，按「系列名」(series_name)分组，组间按「评分数」(rate_num)排序数据
+- `4_filter.py`: 基于 pandas，按季度总数（组内season_num的最大值）、评分数(rate_num)条件过滤数据
+- `6_draw_figure.py`: 基于 matplotlib，绘制折线图（横轴：season_num，纵轴：score）
+
+### **3. 输出文件（各阶段成果）**
+- `0_bangumi_series_first_index.json`: 系列首部动漫索引（extract_first 爬取结果）
+- `1_bangumi_seasons_raw_data.csv`: 全系列动漫原始数据（extract_seasons 爬取结果）
+- `3_bangumi_grouped_sorted.csv`: 分组排序后的数据（2_group_sort.py 处理结果）
+- `5_bangumi_filtered_data.csv`: 过滤后的数据（4_filter.py 处理结果）
+- `7_bangumi_rating_trend.png`: 可视化折线图（6_draw_figure.py 生成）
+

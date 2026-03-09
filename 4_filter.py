@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('3_grouped_sorted_output.csv')
+df = pd.read_csv('3_bangumi_grouped_sorted.csv')
 
 # 步骤1：筛选出「季数≥3」的动漫系列
 series_season_count = df.groupby("series_name")["season_num"].nunique()  
@@ -18,4 +18,4 @@ df_cleaned = df_step1[df_step1["series_name"].isin(valid_series_by_rate)]
 
 print(len(df_cleaned), len(df_cleaned.groupby('series_name')))
 
-df_cleaned.to_csv('5_after_filter.csv', index=False, encoding='utf-8-sig')
+df_cleaned.to_csv('5_bangumi_filtered_data.csv', index=False, encoding='utf-8-sig')

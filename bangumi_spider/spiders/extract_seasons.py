@@ -8,7 +8,7 @@ class ExtractSeasonsSpider(scrapy.Spider):
 
     def start_requests(self):
         #打开extract_first爬虫导出的json
-        with open('0_bangumi_first.json', 'r', encoding='utf-8') as f:
+        with open('0_bangumi_series_first_index.json', 'r', encoding='utf-8') as f:
             self.anime_list = json.load(f)
         
         #提取现有的序号和评分，构造url

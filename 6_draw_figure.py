@@ -72,7 +72,7 @@ plt.ylim(bottom=0, top=10)
 plt.tight_layout()
 
 # 保存图片（可选，比直接显示更清晰）
-plt.savefig("7_figure.png", dpi=300, bbox_inches="tight")
+plt.savefig("7_bangumi_rating_trend.png", dpi=300, bbox_inches="tight")
 
 # 显示图表
 plt.show()

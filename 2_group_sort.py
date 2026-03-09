@@ -1,7 +1,7 @@
 import pandas as pd
 
 # 从当前目录读取output.csv文件
-df = pd.read_csv('1_output.csv')
+df = pd.read_csv('1_bangumi_seasons_raw_data.csv')
 
 # 分组依据的列名
 group_by_column = 'series_name'
@@ -29,4 +29,4 @@ sorted_data = df.sort_values(
 # 删除临时列
 final_sorted_data = sorted_data.drop(columns='group_sort_temp')
 
-final_sorted_data.to_csv('grouped_sorted.output.csv', index=False)
+final_sorted_data.to_csv('3_bangumi_grouped_sorted.csv', index=False)

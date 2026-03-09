@@ -26,3 +26,6 @@
 - `5_bangumi_filtered_data.csv`: 过滤后的数据（4_filter.py 处理结果）
 - `7_bangumi_rating_trend.png`: 可视化折线图（6_draw_figure.py 生成）
 
+#### **4. 额外文件（个人查询筛选）**
+- `8_data_selected.csv`: 过滤后的数据（4_filter.py 处理结果），我查询观众对“第几季叫什么”的看法，人工再次筛选了数据
+- `9_rating_trend_selected.png`: 依据`8_data_selected.csv`生成可视化折线图（6_draw_figure.py 生成）

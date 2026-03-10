@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ===================== 1. 读取数据（根据你的实际读取方式调整） =====================
-df = pd.read_csv("5_after_filter.csv")  # 替换为你的CSV文件路径
+df = pd.read_csv("5_bangumi_filtered_data.csv")  # 替换为你的CSV文件路径
 
 # ===================== 2. 基础配置（解决中文显示+画布大小） =====================
 plt.rcParams["font.sans-serif"] = ["SimHei"]

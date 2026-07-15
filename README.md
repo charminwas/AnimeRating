@@ -1,3 +1,44 @@
+## 二编（2026-07 更新）
+
+项目已重构：原分散的多个 Python 处理脚本已整合为 Jupyter Notebook，流程更清晰，交互更直观OVO
+
+### 主要变化
+
+1. **爬虫输出路径预设**  
+   `extract_first` 和 `extract_seasons` 的输出文件已通过 `custom_settings` 固定写入 `data/raw/` 目录，无需再使用 `-o` 参数：
+   - `series_first_index.json`  
+   - `seasons_raw_data.csv`
+
+2. **数据处理与可视化整合为 Notebook**  
+   - `notebooks/data_cleaning.ipynb`：替代原`2_group_sort.py`与`4_filter.py`，输出清洗后的 CSV 到 `data/processed/`。  
+   - `notebooks/visualization.ipynb`：替代原 `6_draw_figure.py`，绘制评分趋势折线图，同时支持对个人筛选数据的可视化。
+
+3. **目录结构更规范**  
+   - `data/raw/`：爬虫原始数据  
+   - `data/processed/`：分组、过滤后的数据  
+   - `figures/`：所有生成的图表  
+
+### 新的运行步骤
+
+1. **爬虫（与之前相同）**  
+   在项目根目录执行：
+   ```bash
+   scrapy crawl extract_first
+   scrapy crawl extract_seasons
+   ```
+
+2. **数据清洗与可视化**  
+   依次运行：
+   - `notebooks/data_cleaning.ipynb` → 输出 `filtered_data.csv` 等文件  
+   - `notebooks/visualization.ipynb` → 生成 `rating_trend.png` 等图表
+
+3. **自定义分析**  
+   可在 Notebook 中直接修改过滤条件（如最低评分数、最小季数），无需单独编辑脚本。
+
+---
+
+下方为原版 README（历史记录）。
+-----------------------------------------------------------------------------------------------------------------------
 # **AnimeRate**
 此项目通过Scrapy爬取bangumi.tv系列动画数据，经pandas处理、matplotlib可视化，最终输出分析结果。
 

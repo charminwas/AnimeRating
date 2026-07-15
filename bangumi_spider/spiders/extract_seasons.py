@@ -1,14 +1,35 @@
 import scrapy
 import json
+import os
+from pathlib import Path
 from ..items import BangumiSeasonsItem
 
 class ExtractSeasonsSpider(scrapy.Spider):
     name = "extract_seasons"
     allowed_domains = ["bangumi.tv"]
 
+    #确保导出路径和文件名正确
+    custom_settings = {
+        'FEEDS': {
+            os.path.join(
+                Path(__file__).resolve().parent.parent.parent,
+                'data', 'raw', 'seasons_raw_data.csv'
+            ): {
+                'format': 'csv',
+                'encoding': 'utf-8-sig',
+                'overwrite': True,
+                'fields': ['index', 'rate_num', 'score', 'season_name', 'season_num', 'series_name'],
+            },
+        },
+    }
+
     def start_requests(self):
-        #打开extract_first爬虫导出的json
-        with open('0_bangumi_series_first_index.json', 'r', encoding='utf-8') as f:
+        # 动态计算 series_first_index.json 的路径，确保每次都能正确读取
+        json_path = os.path.join(
+            Path(__file__).resolve().parent.parent.parent,
+            'data', 'raw', 'series_first_index.json'
+        )
+        with open(json_path, 'r', encoding='utf-8') as f:
             self.anime_list = json.load(f)
         
         #提取现有的序号和评分，构造url

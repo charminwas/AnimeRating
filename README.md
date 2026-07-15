@@ -1,22 +1,33 @@
 ## 二编（2026-07 更新）
 
-项目已重构：原分散的多个 Python 处理脚本已整合为 Jupyter Notebook，流程更清晰，交互更直观OVO
+项目已重构：原分散的多个 Python 处理脚本已整合为 Jupyter Notebook，流程更清晰，交互更直观 OVO
 
 ### 主要变化
 
 1. **爬虫输出路径预设**  
-   `extract_first` 和 `extract_seasons` 的输出文件已通过 `custom_settings` 固定写入 `data/raw/` 目录，无需再使用 `-o` 参数：
+   `extract_first` 和 `extract_seasons` 爬虫的输出文件已通过 `custom_settings` 固定写入 `data/raw/` 目录（无需再使用 `-o` 参数）：
    - `series_first_index.json`  
    - `seasons_raw_data.csv`
 
 2. **数据处理与可视化整合为 Notebook**  
-   - `notebooks/data_cleaning.ipynb`：替代原`2_group_sort.py`与`4_filter.py`，输出清洗后的 CSV 到 `data/processed/`。  
-   - `notebooks/visualization.ipynb`：替代原 `6_draw_figure.py`，绘制评分趋势折线图，同时支持对个人筛选数据的可视化。
+   - `notebooks/data_cleaning.ipynb`：替代原 `2_group_sort.py` 与 `4_filter.py`，完成分组排序与数据过滤，输出清洗后的 CSV 到 `data/processed/`。  
+   - `notebooks/visualization.ipynb`：替代原 `6_draw_figure.py`，绘制的评分趋势折线图可在notebook里直接查看，同时支持对个人筛选数据的可视化。
 
 3. **目录结构更规范**  
    - `data/raw/`：爬虫原始数据  
    - `data/processed/`：分组、过滤后的数据  
    - `figures/`：所有生成的图表  
+
+4. **环境复现更便捷**  
+   项目根目录同时提供 `environment.yml`（用于 conda）和 `requirements.txt`（用于 pip），可一键搭建开发环境：
+   ```bash
+   # conda 用户
+   conda env create -f environment.yml
+   conda activate anirat
+
+   # pip 用户
+   pip install -r requirements.txt
+   ```
 
 ### 新的运行步骤
 
@@ -35,10 +46,16 @@
 3. **自定义分析**  
    可在 Notebook 中直接修改过滤条件（如最低评分数、最小季数），无需单独编辑脚本。
 
+### 注意事项
+- 爬取数据请遵守 bangumi.tv 的使用条款，合理控制频率。
+- 数据提取于 2026/03/05，后续运行可能因网站结构变化而需要调整解析逻辑。
+
 ---
 
 下方为原版 README（历史记录）。
+
 -----------------------------------------------------------------------------------------------------------------------
+
 # **AnimeRate**
 此项目通过Scrapy爬取bangumi.tv系列动画数据，经pandas处理、matplotlib可视化，最终输出分析结果。
 
